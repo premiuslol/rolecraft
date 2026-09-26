@@ -20,3 +20,8 @@ updates:
       prefix: "chore"
       include: "scope"
     open-pull-requests-limit: 5
+    groups:
+      npm-development:
+        dependency-type: "development"
+        patterns:
+          - "*"
