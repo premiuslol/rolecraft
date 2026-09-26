@@ -1,4 +1,4 @@
-import { accessSync, readdirSync, constants } from 'node:fs'
+import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { createInterface as defaultCreateInterface } from 'node:readline'
 import { stdin as input, stdout as output } from 'node:process'
@@ -10,7 +10,7 @@ import {
   addMcpServer,
   getSupportedMcpAgents,
 } from '../utils/mcp.js'
-import agents from '../agents.js'
+import { detectAgents } from '../utils/agent-detection.js'
 import { createSpinner } from '../utils/spinner.js'
 import { getAgentsDir } from '../utils/lockfile.js'
 
@@ -20,25 +20,7 @@ export function setCreateInterface(fn) {
   createInterface = fn
 }
 
-const KNOWN_AGENTS = agents.map((a) => ({
-  flag: a.flag,
-  label: a.name,
-  dir: () => a.getDir(),
-}))
-
-export function detectAgents() {
-  const found = []
-  for (const agent of KNOWN_AGENTS) {
-    const dir = agent.dir()
-    try {
-      accessSync(dir, constants.F_OK)
-      found.push(agent)
-    } catch {
-      // agent not installed
-    }
-  }
-  return found
-}
+export { detectAgents }
 
 function askQuestion(query) {
   const rl = createInterface({ input, output })
