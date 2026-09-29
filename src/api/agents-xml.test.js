@@ -1,6 +1,6 @@
 import { describe, it, before, beforeEach, after } from 'node:test'
 import assert from 'node:assert/strict'
-import { mkdtempSync, existsSync } from 'node:fs'
+import { mkdtempSync, existsSync, realpathSync } from 'node:fs'
 import { mkdir, rm, writeFile, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
@@ -184,7 +184,7 @@ describe('agentsXmlApi', () => {
     const result = await agentsXmlApi(true)
 
     assert.equal(result.written, true)
-    assert.equal(result.path, join(projectDir, 'AGENTS.md'))
+    assert.equal(result.path, realpathSync(join(projectDir, 'AGENTS.md')))
 
     const written = await readFile(join(projectDir, 'AGENTS.md'), 'utf-8')
     assert.ok(!written.includes('STALE'))
